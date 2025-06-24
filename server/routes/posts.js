@@ -24,6 +24,22 @@ router.post("/", async (req, res) => {
   }
 });
 
+// DELETE /api/posts/:id
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    if (!deletedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json({ message: "Post deleted successfully", deletedPost });
+  } catch (error) {
+    console.error("❌ Error deleting post:", error);
+    res.status(500).json({ error: "Failed to delete post" });
+  }
+});
+
+
+
 // routes/posts.js
 router.get("/", async (req, res) => {
   try {
