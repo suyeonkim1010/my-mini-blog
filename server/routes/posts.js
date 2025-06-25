@@ -38,6 +38,27 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// PUT /api/posts/:id
+router.put("/:id", async (req, res) => {
+  const { title, content } = req.body;
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.id,
+      { title, content },
+      { new: true } // 업데이트된 문서를 반환
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json({ message: "Post updated successfully", updatedPost });
+  } catch (error) {
+    console.error("❌ Error updating post:", error);
+    res.status(500).json({ error: "Failed to update post" });
+  }
+});
 
 
 // routes/posts.js
