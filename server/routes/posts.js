@@ -60,6 +60,20 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// GET /api/posts/:id
+router.get("/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    res.json(post);
+  } catch (error) {
+    console.error("❌ Error fetching post by ID:", error);
+    res.status(500).json({ error: "Failed to fetch post" });
+  }
+});
+
 
 // routes/posts.js
 router.get("/", async (req, res) => {
