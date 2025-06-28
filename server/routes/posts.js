@@ -2,27 +2,29 @@ const express = require('express');
 const router = express.Router();
 const Post = require("../models/Post"); // Post 모델 import
 
-// POST /api/posts → 블로그 글 생성
+// POST /api/posts
 router.post("/", async (req, res) => {
+  const { title, content } = req.body;
+
+  // ✅ 유효성 검사
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ error: "Title is required." });
+  }
+
+  if (!content || content.trim().length < 20) {
+    return res.status(400).json({ error: "Content must be at least 20 characters long." });
+  }
+
   try {
-    console.log("✅ POST request received:", req.body);
-
-    const newPost = new Post({
-      title: req.body.title,
-      content: req.body.content,
-    });
-
+    const newPost = new Post({ title, content });
     const savedPost = await newPost.save();
-
-    res.status(201).json({
-      message: "Post created successfully!",
-      post: savedPost,
-    });
+    res.status(201).json({ message: "Post created successfully!", post: savedPost });
   } catch (error) {
-    console.error("❌ Error saving post:", error);
-    res.status(500).json({ error: "Failed to create post" });
+    console.error("❌ Error creating post:", error);
+    res.status(500).json({ error: "Failed to create post." });
   }
 });
+
 
 // DELETE /api/posts/:id
 router.delete("/:id", async (req, res) => {
