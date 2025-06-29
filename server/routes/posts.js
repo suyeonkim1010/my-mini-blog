@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require("../models/Post"); // Post 모델 import
+const mongoose = require("mongoose");
 
 // POST /api/posts
 router.post("/", async (req, res) => {
@@ -62,17 +63,26 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// GET /api/posts/:id
+
+// ✅ GET: 특정 post 가져오기 (ID 유효성 검사 포함)
 router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // 🔒 유효하지 않은 ObjectId 형식 검사
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid post ID format." });
+  }
+
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(id);
     if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ error: "Post not found." });
     }
+
     res.json(post);
   } catch (error) {
-    console.error("❌ Error fetching post by ID:", error);
-    res.status(500).json({ error: "Failed to fetch post" });
+    console.error("❌ Error fetching post:", error);
+    res.status(500).json({ error: "Failed to fetch post." });
   }
 });
 
