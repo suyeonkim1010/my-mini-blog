@@ -41,27 +41,37 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// PUT /api/posts/:id
-router.put("/:id", async (req, res) => {
+// UPDATE a post with validation
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
   const { title, content } = req.body;
+
+  // ✅ Validate input
+  if (!title || title.trim() === '') {
+    return res.status(400).json({ error: 'Title is required.' });
+  }
+
+  if (!content || content.length < 20) {
+    return res.status(400).json({ error: 'Content must be at least 20 characters long.' });
+  }
 
   try {
     const updatedPost = await Post.findByIdAndUpdate(
-      req.params.id,
+      id,
       { title, content },
-      { new: true } // 업데이트된 문서를 반환
+      { new: true }
     );
 
     if (!updatedPost) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ error: 'Post not found' });
     }
 
-    res.json({ message: "Post updated successfully", updatedPost });
-  } catch (error) {
-    console.error("❌ Error updating post:", error);
-    res.status(500).json({ error: "Failed to update post" });
+    res.json({ message: 'Post updated successfully', updatedPost });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update post' });
   }
 });
+
 
 
 // ✅ GET: 특정 post 가져오기 (ID 유효성 검사 포함)
