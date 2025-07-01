@@ -29,15 +29,24 @@ router.post("/", async (req, res) => {
 
 // DELETE /api/posts/:id
 router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // ✅ Step 1: 유효한 ObjectId인지 확인
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid post ID." });
+  }
+
   try {
-    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    // ✅ Step 2: 삭제 시도
+    const deletedPost = await Post.findByIdAndDelete(id);
     if (!deletedPost) {
-      return res.status(404).json({ error: "Post not found" });
+      return res.status(404).json({ error: "Post not found." });
     }
+
+    // ✅ Step 3: 삭제 성공
     res.json({ message: "Post deleted successfully", deletedPost });
-  } catch (error) {
-    console.error("❌ Error deleting post:", error);
-    res.status(500).json({ error: "Failed to delete post" });
+  } catch (err) {
+    res.status(500).json({ error: "Server error while deleting post" });
   }
 });
 
