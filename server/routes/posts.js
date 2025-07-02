@@ -50,12 +50,16 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// UPDATE a post with validation
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
+
+  // ✅ ID 형식 유효성 검사 추가
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid post ID.' });
+  }
+
   const { title, content } = req.body;
 
-  // ✅ Validate input
   if (!title || title.trim() === '') {
     return res.status(400).json({ error: 'Title is required.' });
   }
@@ -67,16 +71,17 @@ router.put('/:id', async (req, res) => {
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { title, content },
+      { title, content, updatedAt: new Date() },
       { new: true }
     );
 
     if (!updatedPost) {
-      return res.status(404).json({ error: 'Post not found' });
+      return res.status(404).json({ error: 'Post not found.' });
     }
 
-    res.json({ message: 'Post updated successfully', updatedPost });
-  } catch (err) {
+    res.status(200).json({ message: 'Post updated successfully', updatedPost });
+  } catch (error) {
+    console.error('Error updating post:', error);
     res.status(500).json({ error: 'Failed to update post' });
   }
 });
