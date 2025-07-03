@@ -3,6 +3,7 @@ const router = express.Router();
 const Post = require("../models/Post"); // Post 모델 import
 const mongoose = require("mongoose");
 
+
 // POST /api/posts
 router.post("/", async (req, res) => {
   const { title, content } = req.body;
@@ -86,7 +87,26 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  const { keyword } = req.query;
 
+  if (!keyword) {
+    return res.status(400).json({ error: 'Keyword query is required.' });
+  }
+
+  try {
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: keyword, $options: 'i' } },
+        { content: { $regex: keyword, $options: 'i' } }
+      ]
+    });
+    res.json(posts);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({ error: 'Failed to search posts.' });
+  }
+});
 
 // ✅ GET: 특정 post 가져오기 (ID 유효성 검사 포함)
 router.get("/:id", async (req, res) => {
@@ -121,4 +141,5 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
+
 module.exports = router;
