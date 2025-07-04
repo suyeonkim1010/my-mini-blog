@@ -87,26 +87,30 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.get('/search', async (req, res) => {
-  const { keyword } = req.query;
+router.get("/search", async (req, res) => {
+  const { keyword, sort } = req.query;
 
   if (!keyword) {
-    return res.status(400).json({ error: 'Keyword query is required.' });
+    return res.status(400).json({ error: "Keyword query parameter is required" });
   }
+
+  const sortOption = sort === "asc" ? 1 : -1; // 기본은 최신 순
 
   try {
     const posts = await Post.find({
       $or: [
-        { title: { $regex: keyword, $options: 'i' } },
-        { content: { $regex: keyword, $options: 'i' } }
+        { title: new RegExp(keyword, "i") },
+        { content: new RegExp(keyword, "i") },
       ]
-    });
+    }).sort({ createdAt: sortOption });
+
     res.json(posts);
   } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ error: 'Failed to search posts.' });
+    console.error("❌ Error searching posts:", error);
+    res.status(500).json({ error: "Failed to search posts" });
   }
 });
+
 
 // ✅ GET: 특정 post 가져오기 (ID 유효성 검사 포함)
 router.get("/:id", async (req, res) => {
@@ -130,7 +134,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
 // routes/posts.js
 router.get("/", async (req, res) => {
   try {
@@ -141,5 +144,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
+
 
 module.exports = router;
