@@ -134,16 +134,33 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// routes/posts.js
+// GET /api/posts?page=1&limit=5
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.json(posts);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 }) // 최신순 정렬
+      .skip(skip)
+      .limit(limit);
+
+    const totalPosts = await Post.countDocuments();
+
+    res.json({
+      page,
+      limit,
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / limit),
+      posts,
+    });
   } catch (error) {
-    console.error("❌ Error fetching posts:", error);
+    console.error("❌ Error fetching paginated posts:", error);
     res.status(500).json({ error: "Failed to fetch posts" });
   }
 });
+
 
 
 module.exports = router;
