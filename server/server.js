@@ -2,10 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const postsRouter = require("./routes/posts"); // ✅ 라우터만 import
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+
 
 dotenv.config();
 
-const app = express();
 app.use(express.json());
 
 app.use("/api/posts", postsRouter); // ✅ 라우터 연결
