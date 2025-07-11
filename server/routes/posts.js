@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Post = require("../models/Post"); // Post 모델 import
+const Post = require("../models/Post"); 
 const mongoose = require("mongoose");
 
 
@@ -8,7 +8,6 @@ const mongoose = require("mongoose");
 router.post("/", async (req, res) => {
   const { title, content } = req.body;
 
-  // ✅ 유효성 검사
   if (!title || title.trim() === "") {
     return res.status(400).json({ error: "Title is required." });
   }
@@ -32,11 +31,9 @@ router.post("/", async (req, res) => {
 });
 
 
-// ✅ DELETE: 게시물 삭제 (ID 유효성 검사 포함)
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
-  // 🔒 유효하지 않은 ObjectId 형식
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "Invalid post ID." });
   }
@@ -63,7 +60,6 @@ router.delete("/:id", async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
 
-  // ✅ ID 형식 유효성 검사 추가
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid post ID.' });
   }
@@ -108,7 +104,7 @@ router.get("/search", async (req, res) => {
     return res.status(400).json({ error: "Keyword query parameter is required" });
   }
 
-  const sortOption = sort === "asc" ? 1 : -1; // 기본은 최신 순
+  const sortOption = sort === "asc" ? 1 : -1;
 
   try {
     const posts = await Post.find({
@@ -131,11 +127,9 @@ router.get("/search", async (req, res) => {
 });
 
 
-// ✅ GET: 특정 post 가져오기 (ID 유효성 검사 포함)
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  // 🔒 유효하지 않은 ObjectId 형식 검사
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "Invalid post ID format." });
   }
@@ -157,7 +151,6 @@ router.get("/:id", async (req, res) => {
 
 });
 
-// GET /api/posts?page=1&limit=5
 router.get("/", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -186,7 +179,6 @@ router.get("/", async (req, res) => {
     });
     res.status(500).json({ error: "Failed to fetch posts" });
     }
-
 });
 
 
