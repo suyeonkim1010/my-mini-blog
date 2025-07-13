@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PostForm from './PostForm'; 
-import PostList from './PostList';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import PostForm from "./PostForm";
+import PostList from "./PostList";
+import PostDetail from "./PostDetail"; // 🔥 상세 페이지 컴포넌트 (다음에 만들 예정)
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [postToEdit, setPostToEdit] = useState(null); 
-
 
   const fetchPosts = async () => {
     try {
@@ -17,28 +19,32 @@ function App() {
     }
   };
 
-  // ✅ 처음 한 번 글 목록 로딩
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const handleEdit = (post) => {
-    setPostToEdit(post); // 수정 대상 지정
+    setPostToEdit(post);
   };
 
   return (
-    <div>
-      <h1>📝 My Mini Blog ❤️ </h1>
-      <PostForm
-        onSuccess={() => {
-          fetchPosts();
-          setPostToEdit(null); // 폼 제출 후 초기화
-        }}
-        postToEdit={postToEdit}
-        setPostToEdit={setPostToEdit}
-      />
-      <PostList posts={posts} onDelete={fetchPosts} onEdit={handleEdit} />
-    </div>
+    <Router>
+      <div className="App">
+        <h1>📝 My Mini Blog</h1>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <PostForm onSuccess={fetchPosts} />
+                <PostList posts={posts} onDelete={fetchPosts} />
+              </>
+            }
+          />
+          <Route path="/posts/:id" element={<PostDetail />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

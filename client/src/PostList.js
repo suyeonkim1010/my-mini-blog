@@ -1,6 +1,8 @@
 // src/components/PostList.js
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // ✅ 추가
+
 
 function PostList({ posts, onDelete, onEdit }) {
 
@@ -19,7 +21,9 @@ function PostList({ posts, onDelete, onEdit }) {
       <h2>📝 Posts</h2>
       {posts.map((post) => (
         <div key={post._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "15px" }}>
-          <h3>{post.title}</h3>
+          <h3>
+            <Link to={`/posts/${post._id}`}>{post.title}</Link>
+          </h3>
           <p>{post.content}</p>
           <button onClick={() => onEdit(post)}>✏️ EDIT</button>
           <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
