@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function PostForm({ onSuccess, postToEdit, setPostToEdit  }) {
+function PostForm({ onSuccess, postToEdit }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
@@ -36,54 +36,35 @@ function PostForm({ onSuccess, postToEdit, setPostToEdit  }) {
         });
       }
 
-      // 성공 시 초기화
       setTitle("");
       setContent("");
       setError("");
-      setPostToEdit(null);
-
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error("❌ Error creating post:", err);
-      setError("Post creating failed");
+      console.error("❌ Error submitting post:", err);
+      setError("Post submission failed");
     }
   };
 
-
   return (
     <div>
-      <h2>{postToEdit ? "✏️ Edit Post" : "✍️ Create a Post"}</h2>
+      <h2>✍️ {postToEdit ? "Edit Post" : "Create a Post"}</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <textarea
-            placeholder="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={4}
-          />
-        </div>
-        <button type="submit">{postToEdit ? "Update" : "Submit"}</button>
-        {postToEdit && (
-          <button
-            type="button"
-            onClick={() => {
-              setPostToEdit(null);
-              setTitle("");
-              setContent("");
-            }}
-            style={{ marginLeft: "10px" }}
-          >
-            Cancel
-          </button>
-        )}
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <br />
+        <textarea
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={4}
+        />
+        <br />
+        <button type="submit">{postToEdit ? "UPDATE" : "SUBMIT"}</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
