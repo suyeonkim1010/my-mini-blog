@@ -19,16 +19,19 @@ function PostList({ posts, onDelete, onEdit }) {
   return (
     <div>
       <h2>📝 Posts</h2>
-      {posts.map((post) => (
-        <div key={post._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "15px" }}>
-          <h3>
-            <Link to={`/posts/${post._id}`}>{post.title}</Link>
-          </h3>
-          <p>{post.content}</p>
-          <button onClick={() => onEdit(post)}>✏️ EDIT</button>
-          <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
-        </div>
-      ))}
+
+      {posts.length === 0 ? (
+        <p>No posts yet. Be the first to write one!</p>
+      ) : (
+        posts.map((post) => (
+          <div key={post._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+            <button onClick={() => onEdit(post)}>✏️ EDIT</button>
+            <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
