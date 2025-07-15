@@ -27,6 +27,7 @@ function PostList({ posts, onDelete, onEdit }) {
           <Link to={`/posts/${post._id}`}>
             <h3>{post.title}</h3>
           </Link>
+          <p><strong>Author:</strong> {post.author || "Unknown"}</p> 
           <p>{post.content}</p>
           <button onClick={() => onEdit(post)}>✏️ EDIT</button>
           <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>

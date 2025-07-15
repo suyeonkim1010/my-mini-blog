@@ -5,14 +5,18 @@ function PostForm({ onSuccess, postToEdit }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
+  const [author, setAuthor] = useState("");
+
 
   useEffect(() => {
     if (postToEdit) {
       setTitle(postToEdit.title);
       setContent(postToEdit.content);
+      setAuthor(postToEdit.author || "");
     } else {
       setTitle("");
       setContent("");
+      setAuthor(""); // ✅ 추가
     }
   }, [postToEdit]);
 
@@ -28,11 +32,13 @@ function PostForm({ onSuccess, postToEdit }) {
         await axios.put(`http://localhost:8080/api/posts/${postToEdit._id}`, {
           title,
           content,
+          author,
         });
       } else {
         await axios.post("http://localhost:8080/api/posts", {
           title,
           content,
+          author,
         });
       }
 
@@ -55,6 +61,13 @@ function PostForm({ onSuccess, postToEdit }) {
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+        />
+        <br />
+        <input
+          type="text"
+          placeholder="Author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
         />
         <br />
         <textarea

@@ -28,6 +28,7 @@ function PostDetail() {
   return (
     <div>
       <h2>📝 {post.title}</h2>
+      <p><strong>Author:</strong> {post.author || "Unknown"}</p>
       <p>{post.content}</p>
       <p><small>Created: {new Date(post.createdAt).toLocaleString()}</small></p>
       <br />
