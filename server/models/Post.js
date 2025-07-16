@@ -1,13 +1,13 @@
-// server/models/Post.js
 const mongoose = require("mongoose");
 
-const postSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    author: { type: String, required: true }, // ✅ 작성자 필드 추가
+const postSchema = new mongoose.Schema({
+  title: String,
+  content: String,
+  author: String, 
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
-  { timestamps: true }
-);
+});
 
 module.exports = mongoose.model("Post", postSchema);

@@ -114,6 +114,8 @@ router.get("/search", async (req, res) => {
       $or: [
         { title: new RegExp(keyword, "i") },
         { content: new RegExp(keyword, "i") },
+        { author: new RegExp(keyword, "i") },
+
       ]
     }).sort({ createdAt: sortOption });
 

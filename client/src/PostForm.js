@@ -16,7 +16,7 @@ function PostForm({ onSuccess, postToEdit }) {
     } else {
       setTitle("");
       setContent("");
-      setAuthor(""); // ✅ 추가
+      setAuthor(""); 
     }
   }, [postToEdit]);
 
@@ -44,6 +44,7 @@ function PostForm({ onSuccess, postToEdit }) {
 
       setTitle("");
       setContent("");
+      setAuthor("");
       setError("");
       if (onSuccess) onSuccess();
     } catch (err) {
