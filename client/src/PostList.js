@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+
+
 
 const highlightText = (text, keyword) => {
   if (!keyword) return text;
@@ -65,6 +68,11 @@ function PostList({ posts, onDelete, onEdit }) {
             <p>
               <p><strong>By:</strong> {highlightText(post.author || "Unknown", searchTerm)}</p>
             </p>
+
+            <p style={{ color: "#888", fontSize: "0.8rem" }}>
+              Posted on: {format(new Date(post.createdAt), "PPP p")}
+            </p>
+
             <p>{highlightText(post.content, searchTerm)}</p>
             <button onClick={() => onEdit(post)}>✏️ EDIT</button>
             <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
