@@ -28,6 +28,30 @@ router.post("/", async (req, res) => {
   }
 });
 
+// POST /api/posts/:id/comments
+router.post("/:id/comments", async (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+
+  if (!text || text.trim() === "") {
+    return res.status(400).json({ error: "Comment text is required." });
+  }
+
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found." });
+    }
+
+    post.comments.push({ text, createdAt: new Date() });
+    await post.save();
+
+    res.status(201).json({ message: "Comment added.", comments: post.comments });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Failed to add comment." });
+  }
+});
 
 
 router.delete("/:id", async (req, res) => {
