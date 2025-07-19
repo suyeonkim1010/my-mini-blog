@@ -74,6 +74,10 @@ function PostList({ posts, onDelete, onEdit }) {
             </p>
 
             <p>{highlightText(post.content, searchTerm)}</p>
+            <p style={{ fontSize: "0.9rem", color: "#666" }}>
+              💬 {post.comments?.length || 0} comment{post.comments?.length === 1 ? "" : "s"}
+            </p>
+
             <button onClick={() => onEdit(post)}>✏️ EDIT</button>
             <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
           </div>
