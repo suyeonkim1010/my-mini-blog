@@ -54,14 +54,8 @@ function PostList({ posts, onDelete, onEdit }) {
         <p>No posts found.</p>
       ) : (
         filteredPosts.map((post) => (
-          <div
-            key={post._id}
-            style={{
-              border: "1px solid #ccc",
-              margin: "10px",
-              padding: "10px",
-            }}
-          >
+          <div key={post._id} className="post-card">
+
             <Link to={`/posts/${post._id}`}>
               <h3>{highlightText(post.title, searchTerm)}</h3>
             </Link>

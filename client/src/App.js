@@ -5,12 +5,13 @@ import axios from "axios";
 import PostForm from "./PostForm";
 import PostList from "./PostList";
 import PostDetail from "./PostDetail";
+import "./App.css"; // ✨ 다크모드 스타일 정의할 곳
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [postToEdit, setPostToEdit] = useState(null);
+  const [darkMode, setDarkMode] = useState(false); // 🌗 다크모드 상태 추가
 
-  // 📌 전체 포스트 가져오기
   const fetchPosts = async () => {
     try {
       const res = await axios.get("http://localhost:8080/api/posts");
@@ -24,29 +25,31 @@ function App() {
     fetchPosts();
   }, []);
 
-  // ✅ 새 포스트 작성 성공 후 호출
   const handleSuccess = () => {
     fetchPosts();
-    setPostToEdit(null); 
+    setPostToEdit(null);
   };
 
-  // ✅ 삭제 후 목록 갱신
   const handleDelete = () => {
     fetchPosts();
   };
 
-  // ✅ 수정 후 목록 갱신
   const handleEdit = (post) => {
     setPostToEdit(post);
   };
 
+  const toggleDarkMode = () => setDarkMode((prev) => !prev); // ✨ 토글 함수
+
   return (
     <Router>
-      <div className="App">
+      <div className={darkMode ? "App dark" : "App"}>
+        {/* 🌙 다크모드 토글 버튼 */}
+        <button onClick={toggleDarkMode} style={{ marginBottom: "20px" }}>
+          {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+
         <Routes>
-          {/* 🔹 상세 페이지 */}
           <Route path="/posts/:id" element={<PostDetail />} />
-          {/* 🔹 홈: 작성 폼 + 리스트 */}
           <Route
             path="/"
             element={

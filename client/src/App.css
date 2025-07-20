@@ -1,5 +1,33 @@
 .App {
-  text-align: center;
+   background-color: white;
+  color: black;
+  min-height: 100vh;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.post-card {
+  background-color: white;
+  padding: 16px;
+  margin: 12px 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+/* 🌑 다크 모드일 때 카드 스타일 */
+.App.dark .post-card {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.App.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+button {
+  cursor: pointer;
 }
 
 .App-logo {
@@ -27,6 +55,7 @@
 .App-link {
   color: #61dafb;
 }
+
 
 @keyframes App-logo-spin {
   from {
