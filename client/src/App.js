@@ -5,12 +5,13 @@ import axios from "axios";
 import PostForm from "./PostForm";
 import PostList from "./PostList";
 import PostDetail from "./PostDetail";
-import "./App.css"; // ✨ 다크모드 스타일 정의할 곳
+import "./App.css"; 
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [postToEdit, setPostToEdit] = useState(null);
-  const [darkMode, setDarkMode] = useState(false); // 🌗 다크모드 상태 추가
+  const [darkMode, setDarkMode] = useState(false); 
+  const [sortOption, setSortOption] = useState("newest");
 
   const fetchPosts = async () => {
     try {
@@ -38,12 +39,26 @@ function App() {
     setPostToEdit(post);
   };
 
-  const toggleDarkMode = () => setDarkMode((prev) => !prev); // ✨ 토글 함수
+  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+
+  const getSortedPosts = () => {
+  const sorted = [...posts];
+  if (sortOption === "newest") {
+    sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } else if (sortOption === "oldest") {
+    sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  } else if (sortOption === "title") {
+    sorted.sort((a, b) => a.title.localeCompare(b.title));
+  }
+  return sorted;
+};
+
+
 
   return (
     <Router>
       <div className={darkMode ? "App dark" : "App"}>
-        {/* 🌙 다크모드 토글 버튼 */}
+
         <button onClick={toggleDarkMode} style={{ marginBottom: "20px" }}>
           {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
         </button>
@@ -54,8 +69,24 @@ function App() {
             path="/"
             element={
               <>
+              <div style={{ margin: "10px 0" }}>
+                <label htmlFor="sort-select">Sort by: </label>
+                <select
+                  id="sort-select"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="newest">🆕 Newest</option>
+                  <option value="oldest">📜 Oldest</option>
+                  <option value="title">🔤 Title</option>
+                </select>
+              </div>
                 <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
-                <PostList posts={posts} onDelete={handleDelete} onEdit={handleEdit} />
+                <PostList
+                  posts={getSortedPosts()}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
               </>
             }
           />
