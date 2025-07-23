@@ -8,11 +8,20 @@
 
 .post-card {
   border: 1px solid #ccc;
+  padding: 16px;
+  margin: 10px auto;
+  max-width: 700px;
+  background: white;
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 16px;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.post-card h3 {
+  font-size: 1.2rem;
+}
+
+.post-card p {
+  font-size: 1rem;
 }
 
 /* 👇 Hover 시 변화 */
@@ -23,8 +32,6 @@
   cursor: pointer;
 }
 
-
-/* 🌑 다크 모드일 때 카드 스타일 */
 .App.dark .post-card {
   background-color: #1e1e1e;
   color: #e0e0e0;
@@ -33,6 +40,63 @@
 .App.dark {
   background-color: #121212;
   color: #e0e0e0;
+}
+
+@media (max-width: 600px) {
+  .post-card {
+    padding: 12px;
+    margin: 8px 12px;
+  }
+
+  .post-card h3 {
+    font-size: 1rem;
+  }
+
+  .post-card p {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+}
+
+/* Form 스타일 */
+.post-form {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.post-form input,
+.post-form textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .post-form {
+    padding: 12px;
+  }
+
+  .post-form input,
+  .post-form textarea {
+    font-size: 0.95rem;
+  }
+
+  .post-form button {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
 }
 
 button {
