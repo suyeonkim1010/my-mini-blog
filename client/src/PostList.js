@@ -39,15 +39,14 @@ function PostList({ posts, onDelete, onEdit }) {
 
   return (
     <div>
-      <h2>📚 Posts</h2>
+      <h2 className="section-title">📚 Posts</h2>
 
-      {/* 🔍 검색창 */}
-      <input
+      <input  
         type="text"
         placeholder="Search posts..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: "10px", padding: "5px", width: "300px" }}
+        className="search-input"
       />
 
       {filteredPosts.length === 0 ? (

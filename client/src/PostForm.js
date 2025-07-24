@@ -55,7 +55,7 @@ function PostForm({ onSuccess, postToEdit }) {
 
   return (
     <div>
-      <h2>✍️ {postToEdit ? "Edit Post" : "Create a Post"}</h2>
+      <h2 className="section-title">✍️ {postToEdit ? "Edit Post" : "Create a Post"}</h2>
       <form onSubmit={handleSubmit} className="post-form">
         <input
           type="text"

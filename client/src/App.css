@@ -62,7 +62,6 @@
   }
 }
 
-/* Form 스타일 */
 .post-form {
   max-width: 700px;
   margin: 20px auto;
@@ -82,7 +81,28 @@
   border-radius: 4px;
 }
 
-/* 반응형 */
+.post-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.dark-mode-btn, .sort-select {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark-mode-btn:hover,
+.sort-select:hover {
+  background-color: #f0f0f0;
+}
+
 @media (max-width: 600px) {
   .post-form {
     padding: 12px;
@@ -113,6 +133,32 @@ button {
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
+.section-title {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.search-input {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  padding: 10px 15px;
+  width: 60%;
+  max-width: 400px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #555;
+}
+
 
 .App-header {
   background-color: #282c34;
