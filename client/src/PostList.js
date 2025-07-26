@@ -1,9 +1,8 @@
+// src/PostList.js
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-
-
 
 const highlightText = (text, keyword) => {
   if (!keyword) return text;
@@ -14,7 +13,7 @@ const highlightText = (text, keyword) => {
   );
 };
 
-function PostList({ posts, onDelete, onEdit }) {
+function PostList({ posts, onDelete, onEdit, currentPage, setCurrentPage, totalPages }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = async (id) => {
@@ -36,12 +35,19 @@ function PostList({ posts, onDelete, onEdit }) {
     );
   });
 
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
   return (
     <div>
       <h2 className="section-title">📚 Posts</h2>
 
-      <input  
+      <input
         type="text"
         placeholder="Search posts..."
         value={searchTerm}
@@ -54,12 +60,13 @@ function PostList({ posts, onDelete, onEdit }) {
       ) : (
         filteredPosts.map((post) => (
           <div key={post._id} className="post-card">
-
             <Link to={`/posts/${post._id}`}>
               <h3>{highlightText(post.title, searchTerm)}</h3>
             </Link>
+
             <p>
-              <p><strong>By:</strong> {highlightText(post.author || "Unknown", searchTerm)}</p>
+              <strong>By:</strong>{" "}
+              {highlightText(post.author || "Unknown", searchTerm)}
             </p>
 
             <p style={{ color: "#888", fontSize: "0.8rem" }}>
@@ -67,14 +74,31 @@ function PostList({ posts, onDelete, onEdit }) {
             </p>
 
             <p>{highlightText(post.content, searchTerm)}</p>
+
             <p style={{ fontSize: "0.9rem", color: "#666" }}>
-              💬 {post.comments?.length || 0} comment{post.comments?.length === 1 ? "" : "s"}
+              💬 {post.comments?.length || 0} comment
+              {post.comments?.length === 1 ? "" : "s"}
             </p>
 
             <button onClick={() => onEdit(post)}>✏️ EDIT</button>
             <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
           </div>
         ))
+      )}
+
+      {/* ✅ 페이지네이션 버튼 */}
+      {totalPages > 1 && (
+        <div className="pagination-controls">
+          <button onClick={handlePrevPage} disabled={currentPage === 1}>
+            ← Prev
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+            Next →
+          </button>
+        </div>
       )}
     </div>
   );

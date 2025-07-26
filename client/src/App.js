@@ -12,41 +12,43 @@ function App() {
   const [postToEdit, setPostToEdit] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [sortOption, setSortOption] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const POSTS_PER_PAGE = 5;
 
-  // 📌 전체 포스트 가져오기
-  const fetchPosts = async () => {
+  // 📌 페이지 단위로 포스트 가져오기
+  const fetchPosts = async (page = 1) => {
     try {
-      const res = await axios.get("http://localhost:8080/api/posts");
+      const res = await axios.get(
+        `http://localhost:8080/api/posts?page=${page}&limit=${POSTS_PER_PAGE}`
+      );
       setPosts(res.data.posts);
+      setTotalPages(res.data.totalPages || 1);
     } catch (err) {
       console.error("❌ Error fetching posts:", err);
     }
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    fetchPosts(currentPage);
+  }, [currentPage]);
 
-  // ✅ 새 포스트 작성 성공 시
   const handleSuccess = () => {
-    fetchPosts();
+    fetchPosts(currentPage);
     setPostToEdit(null);
   };
 
-  // ✅ 삭제 시 목록 새로고침
   const handleDelete = () => {
-    fetchPosts();
+    fetchPosts(currentPage);
   };
 
-  // ✅ 수정할 포스트 선택 시
   const handleEdit = (post) => {
     setPostToEdit(post);
   };
 
-  // ✅ 다크모드 토글
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
-  // ✅ 정렬된 게시글 반환
+  // 🔽 정렬은 페이지에 가져온 posts 내에서만 적용
   const getSortedPosts = () => {
     const sorted = [...posts];
     if (sortOption === "newest") {
@@ -63,15 +65,11 @@ function App() {
     <Router>
       <div className={darkMode ? "App dark" : "App"}>
         <Routes>
-          {/* 상세 페이지 */}
           <Route path="/posts/:id" element={<PostDetail />} />
-
-          {/* 홈 (작성 + 리스트) */}
           <Route
             path="/"
             element={
               <>
-                {/* ✅ 컨트롤 영역 */}
                 <div className="post-controls">
                   <button onClick={toggleDarkMode} className="dark-mode-btn">
                     {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
@@ -89,10 +87,15 @@ function App() {
                 </div>
 
                 <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
+
                 <PostList
                   posts={getSortedPosts()}
                   onDelete={handleDelete}
                   onEdit={handleEdit}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  totalPages={totalPages}
+                  fetchPosts={fetchPosts}
                 />
               </>
             }
