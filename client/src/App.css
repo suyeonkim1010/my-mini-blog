@@ -166,9 +166,33 @@
   }
 }
 
+/* 공통 버튼 스타일 */
 button {
+  background-color: #6aa2de;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 5px 5px 10px 0;
+  font-size: 0.95rem;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* 다크모드에서도 잘 보이게 */
+.App.dark button {
+  background-color: #4d90fe;
+  color: white;
+}
+
+.App.dark button:hover {
+  background-color: #2e6bd1;
+}
+
 
 .App-logo {
   height: 40vmin;
