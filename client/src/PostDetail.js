@@ -45,6 +45,13 @@ function PostDetail() {
     }
   };
 
+  const handleKeyDown = (e) => {
+  if (e.ctrlKey && e.key === "Enter") {
+    handleCommentSubmit();
+  }
+  };
+
+
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!post) return <p>Loading...</p>;
 
@@ -80,16 +87,19 @@ function PostDetail() {
         )}
 
         <form onSubmit={handleCommentSubmit} style={{ marginTop: "1rem" }}>
-          <textarea
-            rows={3}
-            style={{ width: "100%", padding: "0.5rem" }}
-            placeholder="Write a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button type="submit" style={{ marginTop: "0.5rem" }}>
-            ➕ Add Comment
-          </button>
+          <div className="comment-box">
+            <textarea
+              className="comment-textarea"
+              rows={3}
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button className="comment-submit-btn" onClick={handleCommentSubmit}>
+              ➕ Add Comment
+            </button>
+          </div>
         </form>
       </div>
 
