@@ -14,6 +14,8 @@ function App() {
   const [sortOption, setSortOption] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [toastMessage, setToastMessage] = useState("");
+
   const POSTS_PER_PAGE = 5;
 
   // 📌 페이지 단위로 포스트 가져오기
@@ -33,9 +35,10 @@ function App() {
     fetchPosts(currentPage);
   }, [currentPage]);
 
-  const handleSuccess = () => {
-    fetchPosts(currentPage);
+  const handleSuccess = (isEdit = false) => {
+    fetchPosts();
     setPostToEdit(null);
+    showToast(isEdit ? "✏️ Post updated successfully!" : "✅ Post created successfully!");
   };
 
   const handleDelete = () => {
@@ -46,9 +49,13 @@ function App() {
     setPostToEdit(post);
   };
 
+  const showToast = (message) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(""), 3000); // 3초 후 사라짐
+  };
+
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
 
-  // 🔽 정렬은 페이지에 가져온 posts 내에서만 적용
   const getSortedPosts = () => {
     const sorted = [...posts];
     if (sortOption === "newest") {
@@ -62,47 +69,55 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className={darkMode ? "App dark" : "App"}>
-        <Routes>
-          <Route path="/posts/:id" element={<PostDetail />} />
-          <Route
-            path="/"
-            element={
-              <>
-                <div className="post-controls">
-                  <button onClick={toggleDarkMode} className="dark-mode-btn">
-                    {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                  </button>
+    <div>
+      {toastMessage && (
+        <div className="toast">
+          {toastMessage}
+        </div>
+      )}
 
-                  <select
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                    className="sort-select"
-                  >
-                    <option value="newest">🆕 Newest</option>
-                    <option value="oldest">📜 Oldest</option>
-                    <option value="title">🔤 Title</option>
-                  </select>
-                </div>
+      <Router>
+        <div className={darkMode ? "App dark" : "App"}>
+          <Routes>
+            <Route path="/posts/:id" element={<PostDetail />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <div className="post-controls">
+                    <button onClick={toggleDarkMode} className="dark-mode-btn">
+                      {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+                    </button>
 
-                <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
+                    <select
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value)}
+                      className="sort-select"
+                    >
+                      <option value="newest">🆕 Newest</option>
+                      <option value="oldest">📜 Oldest</option>
+                      <option value="title">🔤 Title</option>
+                    </select>
+                  </div>
 
-                <PostList
-                  posts={getSortedPosts()}
-                  onDelete={handleDelete}
-                  onEdit={handleEdit}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  totalPages={totalPages}
-                  fetchPosts={fetchPosts}
-                />
-              </>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
+                  <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
+
+                  <PostList
+                    posts={getSortedPosts()}
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPages={totalPages}
+                    fetchPosts={fetchPosts}
+                  />
+                </>
+              }
+            />
+          </Routes>
+        </div>
+      </Router>
+    </div>
   );
 }
 

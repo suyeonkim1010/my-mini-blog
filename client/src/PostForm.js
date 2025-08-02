@@ -22,6 +22,7 @@ function PostForm({ onSuccess, postToEdit }) {
     setError("");
   }, [postToEdit]);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,7 +50,7 @@ function PostForm({ onSuccess, postToEdit }) {
       setAuthor("");
       setError("");
       setFieldErrors({});
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess(!!postToEdit);  // true면 수정, false면 새 글
     } catch (err) {
       console.error("❌ Error submitting post:", err);
       setError("Post submission failed");
