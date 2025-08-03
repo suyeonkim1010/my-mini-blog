@@ -43,6 +43,7 @@ function App() {
 
   const handleDelete = () => {
     fetchPosts(currentPage);
+    showToast("🗑️ Post deleted successfully!");
   };
 
   const handleEdit = (post) => {
