@@ -56,7 +56,10 @@ function PostList({ posts, onDelete, onEdit, currentPage, setCurrentPage, totalP
       />
 
       {filteredPosts.length === 0 ? (
-        <p>No posts found.</p>
+        <div className="no-posts">
+          <p style={{ fontSize: "2rem" }}>😢</p>
+          <p>No posts yet. Be the first to write one!</p>
+        </div>
       ) : (
         filteredPosts.map((post) => (
           <div key={post._id} className="post-card">
