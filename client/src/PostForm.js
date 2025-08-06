@@ -50,7 +50,7 @@ function PostForm({ onSuccess, postToEdit }) {
       setAuthor("");
       setError("");
       setFieldErrors({});
-      if (onSuccess) onSuccess(!!postToEdit);  // true면 수정, false면 새 글
+      if (onSuccess) onSuccess(!!postToEdit);
     } catch (err) {
       console.error("❌ Error submitting post:", err);
       setError("Post submission failed");

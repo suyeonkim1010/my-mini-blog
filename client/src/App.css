@@ -297,6 +297,21 @@ button:hover {
   animation: fade-in-out 3s ease-in-out;
 }
 
+/* App.css */
+.toggle-form-btn {
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  background-color: #dceefc;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.toggle-form-btn:hover {
+  background-color: #c7e4f7;
+}
+
 .no-posts {
   text-align: center;
   margin-top: 50px;

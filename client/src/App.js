@@ -15,10 +15,10 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [toastMessage, setToastMessage] = useState("");
+  const [showForm, setShowForm] = useState(true); // ✅ 글쓰기 폼 토글 상태
 
   const POSTS_PER_PAGE = 5;
 
-  // 📌 페이지 단위로 포스트 가져오기
   const fetchPosts = async (page = 1) => {
     try {
       const res = await axios.get(
@@ -48,11 +48,12 @@ function App() {
 
   const handleEdit = (post) => {
     setPostToEdit(post);
+    if (!showForm) setShowForm(true); // ✅ 폼이 숨겨져 있으면 자동으로 펼치기
   };
 
   const showToast = (message) => {
     setToastMessage(message);
-    setTimeout(() => setToastMessage(""), 3000); // 3초 후 사라짐
+    setTimeout(() => setToastMessage(""), 3000);
   };
 
   const toggleDarkMode = () => setDarkMode((prev) => !prev);
@@ -70,55 +71,61 @@ function App() {
   };
 
   return (
-    <div>
-      {toastMessage && (
-        <div className="toast">
-          {toastMessage}
-        </div>
-      )}
+    <Router>
+      <div className={darkMode ? "App dark" : "App"}>
+        <Routes>
+          <Route path="/posts/:id" element={<PostDetail />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <div className="post-controls">
+                  <button onClick={toggleDarkMode} className="dark-mode-btn">
+                    {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+                  </button>
 
-      <Router>
-        <div className={darkMode ? "App dark" : "App"}>
-          <Routes>
-            <Route path="/posts/:id" element={<PostDetail />} />
-            <Route
-              path="/"
-              element={
-                <>
-                  <div className="post-controls">
-                    <button onClick={toggleDarkMode} className="dark-mode-btn">
-                      {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                    </button>
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="sort-select"
+                  >
+                    <option value="newest">🆕 Newest</option>
+                    <option value="oldest">📜 Oldest</option>
+                    <option value="title">🔤 Title</option>
+                  </select>
+                </div>
 
-                    <select
-                      value={sortOption}
-                      onChange={(e) => setSortOption(e.target.value)}
-                      className="sort-select"
-                    >
-                      <option value="newest">🆕 Newest</option>
-                      <option value="oldest">📜 Oldest</option>
-                      <option value="title">🔤 Title</option>
-                    </select>
-                  </div>
+                {/* ✅ 글쓰기 폼 토글 버튼 */}
+                <button
+                  onClick={() => setShowForm((prev) => !prev)}
+                  className="toggle-form-btn"
+                >
+                  {showForm ? "➖ Hide Form" : "➕ Write a Post"}
+                </button>
 
+                {/* ✅ 조건부 렌더링 */}
+                {showForm && (
                   <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
+                )}
 
-                  <PostList
-                    posts={getSortedPosts()}
-                    onDelete={handleDelete}
-                    onEdit={handleEdit}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    totalPages={totalPages}
-                    fetchPosts={fetchPosts}
-                  />
-                </>
-              }
-            />
-          </Routes>
-        </div>
-      </Router>
-    </div>
+                <PostList
+                  posts={getSortedPosts()}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  totalPages={totalPages}
+                  fetchPosts={fetchPosts}
+                />
+
+                {/* ✅ 토스트 메시지 */}
+                {toastMessage && <div className="toast">{toastMessage}</div>}
+              </>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
