@@ -15,7 +15,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [toastMessage, setToastMessage] = useState("");
-  const [showForm, setShowForm] = useState(true); // ✅ 글쓰기 폼 토글 상태
+  const [showForm, setShowForm] = useState(true); 
 
   const POSTS_PER_PAGE = 5;
 
@@ -48,7 +48,7 @@ function App() {
 
   const handleEdit = (post) => {
     setPostToEdit(post);
-    if (!showForm) setShowForm(true); // ✅ 폼이 숨겨져 있으면 자동으로 펼치기
+    if (!showForm) setShowForm(true); 
   };
 
   const showToast = (message) => {
@@ -95,7 +95,6 @@ function App() {
                   </select>
                 </div>
 
-                {/* ✅ 글쓰기 폼 토글 버튼 */}
                 <button
                   onClick={() => setShowForm((prev) => !prev)}
                   className="toggle-form-btn"
@@ -103,7 +102,6 @@ function App() {
                   {showForm ? "➖ Hide Form" : "➕ Write a Post"}
                 </button>
 
-                {/* ✅ 조건부 렌더링 */}
                 {showForm && (
                   <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
                 )}
@@ -118,7 +116,6 @@ function App() {
                   fetchPosts={fetchPosts}
                 />
 
-                {/* ✅ 토스트 메시지 */}
                 {toastMessage && <div className="toast">{toastMessage}</div>}
               </>
             }

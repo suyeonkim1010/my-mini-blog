@@ -1,4 +1,4 @@
-// src/PostDetail.js
+// ✅ PostDetail.js - 스타일 개선 버전
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
@@ -8,9 +8,8 @@ function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState("");
-  const [newComment, setNewComment] = useState(""); // ✅ 댓글 상태
+  const [newComment, setNewComment] = useState("");
 
-  // 포스트 불러오기
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -21,11 +20,9 @@ function PostDetail() {
         setError("Failed to load post.");
       }
     };
-
     fetchPost();
   }, [id]);
 
-  // 댓글 제출
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
@@ -35,8 +32,6 @@ function PostDetail() {
         text: newComment,
       });
       setNewComment("");
-
-      // 댓글 작성 후 포스트 다시 가져오기
       const res = await axios.get(`http://localhost:8080/api/posts/${id}`);
       setPost(res.data);
     } catch (err) {
@@ -46,11 +41,10 @@ function PostDetail() {
   };
 
   const handleKeyDown = (e) => {
-  if (e.ctrlKey && e.key === "Enter") {
-    handleCommentSubmit();
-  }
+    if (e.ctrlKey && e.key === "Enter") {
+      handleCommentSubmit(e);
+    }
   };
-
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!post) return <p>Loading...</p>;
@@ -58,27 +52,23 @@ function PostDetail() {
   const createdDate = new Date(post.createdAt);
 
   return (
-    <div>
-      <h2>📝 {post.title}</h2>
-      <p><strong>Author:</strong> {post.author || "Unknown"}</p>
-      <p>{post.content}</p>
-      {isValid(createdDate) ? (
-        <p>Created at: {format(createdDate, "PPP p")}</p>
-      ) : (
-        <p>Created at: Unknown</p>
-      )}
+    <div className="post-detail-card">
+      <h2 className="detail-title">📝 {post.title}</h2>
+      <div className="detail-meta">
+        <p><span>👤</span> {post.author || "Unknown"}</p>
+        <p><span>⏰</span> {isValid(createdDate) ? format(createdDate, "PPP p") : "Unknown"}</p>
+      </div>
+
+      <div className="detail-content">{post.content}</div>
 
       <hr />
-      <div>
+      <div className="comment-section">
         <h3>🗨️ Comments</h3>
         {post.comments?.length > 0 ? (
-          <ul>
+          <ul className="comment-list">
             {post.comments.map((comment, index) => (
               <li key={index}>
-                {comment.text}{" "}
-                <small style={{ color: "#777" }}>
-                  ({new Date(comment.createdAt).toLocaleString()})
-                </small>
+                {comment.text} <small>({new Date(comment.createdAt).toLocaleString()})</small>
               </li>
             ))}
           </ul>
@@ -86,25 +76,22 @@ function PostDetail() {
           <p>No comments yet.</p>
         )}
 
-        <form onSubmit={handleCommentSubmit} style={{ marginTop: "1rem" }}>
-          <div className="comment-box">
-            <textarea
-              className="comment-textarea"
-              rows={3}
-              placeholder="Write a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <button className="comment-submit-btn" onClick={handleCommentSubmit}>
-              ➕ Add Comment
-            </button>
-          </div>
+        <form onSubmit={handleCommentSubmit} className="comment-form">
+          <textarea
+            className="comment-textarea"
+            rows={3}
+            placeholder="Write a comment..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button className="comment-submit-btn" type="submit">
+            ➕ Add Comment
+          </button>
         </form>
       </div>
 
-      <br />
-      <Link to="/">← Back to List</Link>
+      <Link to="/" className="back-link">← Back to List</Link>
     </div>
   );
 }

@@ -6,7 +6,7 @@ function PostForm({ onSuccess, postToEdit }) {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState({}); // 🔥 추가
+  const [fieldErrors, setFieldErrors] = useState({}); 
 
   useEffect(() => {
     if (postToEdit) {
@@ -59,7 +59,7 @@ function PostForm({ onSuccess, postToEdit }) {
 
   return (
     <div>
-      <h2 className="section-title">✍️ {postToEdit ? "Edit Post" : "Create a Post"}</h2>
+      <h2 className="section-title">✍️ {postToEdit ? "Edit Your Post" : "Create a Post!!"}</h2>
       <form onSubmit={handleSubmit} className="post-form">
         <input
           type="text"
