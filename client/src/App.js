@@ -79,29 +79,30 @@ function App() {
             path="/"
             element={
               <>
-                <div className="post-controls">
-                  <button onClick={toggleDarkMode} className="dark-mode-btn">
+                <div className="control-panel">
+                  <button onClick={toggleDarkMode} className="control-button">
                     {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+                  </button>
+
+                  <button
+                    onClick={() => setShowForm((prev) => !prev)}
+                    className="control-button"
+                  >
+                    {showForm ? "➖ Hide Form" : "➕ Write a Post"}
                   </button>
 
                   <select
                     value={sortOption}
                     onChange={(e) => setSortOption(e.target.value)}
-                    className="sort-select"
+                    className="control-button"
                   >
                     <option value="newest">🆕 Newest</option>
                     <option value="oldest">📜 Oldest</option>
                     <option value="title">🔤 Title</option>
                   </select>
+
                 </div>
-
-                <button
-                  onClick={() => setShowForm((prev) => !prev)}
-                  className="toggle-form-btn"
-                >
-                  {showForm ? "➖ Hide Form" : "➕ Write a Post"}
-                </button>
-
+                
                 {showForm && (
                   <PostForm onSuccess={handleSuccess} postToEdit={postToEdit} />
                 )}
