@@ -36,6 +36,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: all 0.2s ease;
+  white-space: pre-line;
 }
 
 .post-card:hover {
@@ -140,6 +141,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   color: var(--text-color);
+  white-space: pre-line;
 }
 
 .detail-title {
@@ -171,6 +173,7 @@
 .comment-list {
   list-style: none;
   padding-left: 0;
+  white-space: pre-line;
 }
 
 .comment-list li {
@@ -272,7 +275,6 @@
   background-color: var(--primary-dark);
 }
 
-/* 다크 모드에서도 hover가 동작하게 더 구체적으로 지정 */
 .App.dark .control-button:hover,
 .App.dark .post-form button:hover,
 .App.dark .comment-submit-btn:hover {
