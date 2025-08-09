@@ -272,6 +272,14 @@
   background-color: var(--primary-dark);
 }
 
+/* 다크 모드에서도 hover가 동작하게 더 구체적으로 지정 */
+.App.dark .control-button:hover,
+.App.dark .post-form button:hover,
+.App.dark .comment-submit-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
