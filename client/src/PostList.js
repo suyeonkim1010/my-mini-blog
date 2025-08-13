@@ -56,10 +56,7 @@ function PostList({ posts, onDelete, onEdit, currentPage, setCurrentPage, totalP
       />
 
       {filteredPosts.length === 0 ? (
-        <div className="no-posts">
-          <p style={{ fontSize: "2rem" }}>😢</p>
-          <p>No posts yet. Be the first to write one!</p>
-        </div>
+        <p className="no-posts">😢 No posts yet. Be the first to write one!</p>
       ) : (
         filteredPosts.map((post) => (
           <div key={post._id} className="post-card">
@@ -67,41 +64,31 @@ function PostList({ posts, onDelete, onEdit, currentPage, setCurrentPage, totalP
               <h3>{highlightText(post.title, searchTerm)}</h3>
             </Link>
 
-            <p>
-              <strong>By:</strong>{" "}
-              {highlightText(post.author || "Unknown", searchTerm)}
-            </p>
+            <p><strong>By:</strong> {highlightText(post.author || "Unknown", searchTerm)}</p>
+            <p className="post-meta">Posted on: {format(new Date(post.createdAt), "PPP p")}</p>
 
-            <p style={{ color: "#888", fontSize: "0.8rem" }}>
-              Posted on: {format(new Date(post.createdAt), "PPP p")}
-            </p>
+            <p className="post-content">{highlightText(post.content, searchTerm)}</p>
+            <p className="post-comments">💬 {post.comments?.length || 0} comment{post.comments?.length === 1 ? "" : "s"}</p>
 
-            <p>{highlightText(post.content, searchTerm)}</p>
-
-            <p style={{ fontSize: "0.9rem", color: "#666" }}>
-              💬 {post.comments?.length || 0} comment
-              {post.comments?.length === 1 ? "" : "s"}
-            </p>
-
-            <button onClick={() => onEdit(post)}>✏️ EDIT</button>
-            <button onClick={() => handleDelete(post._id)}>🗑 DELETE</button>
+            {/* 🔹 액션 버튼 영역 */}
+            <div className="post-actions">
+              <button
+                type="button"
+                className="btn btn-edit"
+                onClick={() => onEdit(post)}
+              >
+                ✏️ Edit
+              </button>
+              <button
+                type="button"
+                className="btn btn-delete"
+                onClick={() => handleDelete(post._id)}
+              >
+                🗑 Delete
+              </button>
+            </div>
           </div>
         ))
-      )}
-
-      {/* ✅ 페이지네이션 버튼 */}
-      {totalPages > 1 && (
-        <div className="pagination-controls">
-          <button onClick={handlePrevPage} disabled={currentPage === 1}>
-            ← Prev
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-            Next →
-          </button>
-        </div>
       )}
     </div>
   );

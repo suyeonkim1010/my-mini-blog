@@ -296,6 +296,71 @@
   background-color: var(--primary-dark);
 }
 
+/* 공통 버튼 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: var(--primary-color);
+  color: #fff;
+  transition: background-color .2s ease, box-shadow .2s ease, transform .04s ease;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Edit / Delete 변형 */
+.btn-edit {
+  /* 기본 파랑 계열 그대로 사용 */
+}
+
+.btn-delete {
+  background: #e57373;
+}
+
+.btn-delete:hover {
+  background: #d64f4f;
+}
+
+/* 카드 하단 버튼 묶음 */
+.post-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* 다크모드 밝기 튜닝 */
+.App.dark .btn {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.App.dark .btn:hover {
+  background: var(--primary-dark);
+}
+
+.App.dark .btn-delete {
+  background: #d66b6b;
+}
+
+.App.dark .btn-delete:hover {
+  background: #c94d4d;
+}
+
+/* (선택) 작은 사이즈 변형이 필요하면 */
+.btn--sm { padding: 6px 10px; font-size: .9rem; }
+
 
 
 @keyframes fadeIn {
