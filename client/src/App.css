@@ -362,6 +362,9 @@
 .btn--sm { padding: 6px 10px; font-size: .9rem; }
 
 
+.post-card.clickable { cursor: pointer; }
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
