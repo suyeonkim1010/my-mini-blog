@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const postsRouter = require("./routes/posts"); // ✅ 라우터만 import
 const cors = require('cors');
 const app = express();
+require('dotenv').config();
 
 app.use(cors());
 

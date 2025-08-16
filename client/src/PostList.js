@@ -1,7 +1,7 @@
 // src/PostList.js
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
 const highlightText = (text, keyword) => {
@@ -12,42 +12,52 @@ const highlightText = (text, keyword) => {
   );
 };
 
-function PostList({ posts, onDelete, onEdit }) {
+function PostList({
+  posts,
+  onDelete,
+  onEdit,
+  currentPage,
+  setCurrentPage,
+  totalPages,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
+  const [deletingId, setDeletingId] = useState(null);
 
-  const handleDelete = async (e, id) => {
-    e.stopPropagation();              // ✅ 카드 클릭으로 전파 방지
+  const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete it?")) return;
+
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+
     try {
-      await axios.delete(`http://localhost:8080/api/posts/${id}`);
+      setDeletingId(id);
+      await axios.delete(`/api/posts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "x-api-key": token,
+          "x-username": username || "unknown",
+        },
+      });
+      setDeletingId(null);
       if (onDelete) onDelete();
     } catch (error) {
       console.error("❌ Error deleting post:", error);
+      setDeletingId(null);
+      alert(
+        error?.response?.data?.error ||
+          "Failed to delete post (check your admin key)."
+      );
     }
   };
 
-  const handleEditClick = (e, post) => {
-    e.stopPropagation();              // ✅ 전파 방지
-    onEdit && onEdit(post);
-  };
-
-  const filteredPosts = posts.filter((post) => {
-    const keyword = searchTerm.toLowerCase();
+  const filtered = posts.filter((post) => {
+    const k = searchTerm.toLowerCase();
     return (
-      post.title.toLowerCase().includes(keyword) ||
-      post.content.toLowerCase().includes(keyword) ||
-      (post.author && post.author.toLowerCase().includes(keyword))
+      post.title.toLowerCase().includes(k) ||
+      post.content.toLowerCase().includes(k) ||
+      (post.author && post.author.toLowerCase().includes(k))
     );
   });
-
-  const handleCardOpen = (id) => navigate(`/posts/${id}`);
-  const handleCardKey = (e, id) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleCardOpen(id);
-    }
-  };
 
   return (
     <div>
@@ -61,25 +71,25 @@ function PostList({ posts, onDelete, onEdit }) {
         className="search-input"
       />
 
-      {filteredPosts.length === 0 ? (
-        <p className="no-posts">😢 No posts yet. Be the first to write one!</p>
+      {filtered.length === 0 ? (
+        <div className="no-posts">
+          <div style={{ fontSize: "2rem" }}>😢</div>
+          <p>No posts found.</p>
+        </div>
       ) : (
-        filteredPosts.map((post) => (
-          <div
-            key={post._id}
-            className="post-card clickable"     // ✅ 시각적 힌트
-            role="button"                       // ✅ 접근성
-            tabIndex={0}
-            onClick={() => handleCardOpen(post._id)}
-            onKeyDown={(e) => handleCardKey(e, post._id)}
-          >
-            {/* 제목은 일반 텍스트로 둬도 되고, 굳이 Link 필요 없음 */}
-            <h3>{highlightText(post.title, searchTerm)}</h3>
+        filtered.map((post) => (
+          <div key={post._id} className="post-card">
+            <Link to={`/posts/${post._id}`}>
+              <h3>{highlightText(post.title, searchTerm)}</h3>
+            </Link>
 
-            <p><strong>By:</strong> {highlightText(post.author || "Unknown", searchTerm)}</p>
-
-            <p style={{ color: "#888", fontSize: "0.9rem" }}>
-              Posted on: {format(new Date(post.createdAt), "PPP p")}
+            <p style={{ margin: "4px 0", color: "#6b7280" }}>
+              <strong>By:</strong>{" "}
+              {highlightText(post.author || "Unknown", searchTerm)}
+              {" · "}
+              <span style={{ fontSize: "0.9rem" }}>
+                {format(new Date(post.createdAt), "PPP p")}
+              </span>
             </p>
 
             <p style={{ whiteSpace: "pre-line" }}>
@@ -87,25 +97,47 @@ function PostList({ posts, onDelete, onEdit }) {
             </p>
 
             <p style={{ fontSize: "0.9rem", color: "#666" }}>
-              💬 {post.comments?.length || 0} comment{post.comments?.length === 1 ? "" : "s"}
+              💬 {post.comments?.length || 0} comment
+              {post.comments?.length === 1 ? "" : "s"}
             </p>
 
-            <div style={{ display: "flex", gap: 8 }}>
-              <button
-                className="btn-secondary"
-                onClick={(e) => handleEditClick(e, post)}
-              >
+            <div>
+              <button onClick={() => onEdit(post)} className="btn btn-edit">
                 ✏️ EDIT
               </button>
               <button
-                className="btn-danger"
-                onClick={(e) => handleDelete(e, post._id)}
+                onClick={() => handleDelete(post._id)}
+                className="btn btn-delete"
+                disabled={deletingId === post._id}
               >
-                🗑 DELETE
+                {deletingId === post._id ? "Deleting..." : "🗑 DELETE"}
               </button>
             </div>
           </div>
         ))
+      )}
+
+      {/* Pagination (optional UI if you’re showing it here) */}
+      {totalPages >= 1 && (
+        <div className="pagination-controls">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1}
+          >
+            ◀ Prev
+          </button>
+          <span>
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((p) => Math.min(totalPages, p + 1))
+            }
+            disabled={currentPage >= totalPages}
+          >
+            Next ▶
+          </button>
+        </div>
       )}
     </div>
   );
